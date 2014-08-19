@@ -117,10 +117,9 @@ namespace netlib
 
 
 int main(int argc, char *argv[])
-{
-
+{       
         QApplication app(argc, argv);
-        bool end = false;
+        //bool end = false;
         char data_recv[256];
         //char data_send[256];
        // Message* message = new Message;
@@ -173,12 +172,16 @@ int main(int argc, char *argv[])
         thread_queue_home.start(); // поток на запись команд
 
         glass_friend->setWindowTitle(QObject::tr("Tetris Friend"));
-        glass_friend->resize(350, 350);
+        glass_friend->resize(400, 300);
         glass_friend->show();
 
 
+        QPoint point = glass_friend->mapToGlobal(QPoint(0,0));
+
         glass_home->setWindowTitle(QObject::tr("Tetris Home"));
-        glass_home->resize(350, 350);
+        glass_home->resize(400, 300);
+        glass_home->move(point.x()+300,point.y());
+        glass_friend->move(point.x()-300,point.y());
         glass_home->show();
 
     /*

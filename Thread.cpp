@@ -18,6 +18,7 @@
 
 void netlib::threadfunction_glass_send(Glass* glass_home,Glass* glass_friend, Socket* client_socket,bool& end)
 {
+    int i = 0;
     for(;;)
     {
         if(glass_home->queue_send.size() != 0)
@@ -28,25 +29,27 @@ void netlib::threadfunction_glass_send(Glass* glass_home,Glass* glass_friend, So
               break;
           }
 
-          char* data_send = new char[glass_home->queue_send.return_last().size()+1+1];
+          //char* data_send = new char[glass_home->queue_send.return_last().size()+1+1];
+          char* data_send = new char[glass_home->queue_send.return_last().size()];
           for(int i = 0; i < glass_home->queue_send.return_last().size() ; i++)
               data_send[i] = glass_home->queue_send.return_last()[i];
-          data_send[glass_home->queue_send.return_last().size()+1] = glass_home->return_figure()->return_figure_type()+'0';
+          //data_send[glass_home->queue_send.return_last().size()+1] = glass_home->return_figure()->return_figure_type()+'0';
           if (strncmp(data_send,"space",5) == 0)
             glass_friend->queue.add_front("space");
           client_socket->send(data_send,256);
+          std::cout<<"COMMAND SEND WAS #"<<i++<<" "<<data_send<<std::endl;
           glass_home->queue_send.delete_back();
           delete[] data_send;
         }
     }
 }
 
-
 void netlib::threadfunction_read(int sockfd,char* data,int size,bool& end,Glass* glass_friend,Glass* glass_home)
 {
     ssize_t bytes = 0;
     fd_set readsockets;
     timeval timeout;
+    int i = 0;
 
     for( ; ; )
     {
@@ -67,10 +70,12 @@ void netlib::threadfunction_read(int sockfd,char* data,int size,bool& end,Glass*
                 bytes = recv(sockfd,data,256,0);
                 if (bytes > 0 )
                 {
+                    std::cout<<"COMMAND READ #"<<i++<<" "<<data<<std::endl;
                    //перевод сообщения
                    if(strncmp(data,"type",4) == 0 )
                    {
                        glass_friend->type_friend = (std::atoi(&data[4]));
+                       //glass_friend->type_friend = (std::atoi(&data[5]));
                        std::cout<<"ATOI "<<glass_friend->type_friend<<std::endl;
                    }
                    if(strncmp(data,"space",5) == 0)

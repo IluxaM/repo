@@ -16,6 +16,7 @@ Glass::Glass(QWidget* parent) : QGLWidget(parent)
    difficulty = 0; 
    plane_.plane = new bool* [n];
    plane_.color = new int* [n];
+   done = false;
    for(int i = 0 ; i < n ; i++)
    {
        plane_.plane[i] = new bool [N];
@@ -39,6 +40,7 @@ Glass::Glass(QWidget* parent) : QGLWidget(parent)
    timer_1->start(400);
    rightarm_keyboard = true;
    friend_window = false;
+   type_friend = 0;
 }
 
 void Glass::initializeGL()
@@ -293,7 +295,7 @@ void Glass::game()
   string support_el;
   if(done)
   {
-      QMessageBox::information(0, "Information", "Game Over");
+      QMessageBox::information(0, "Information", "Closing client's widgets...");
       exit(0);
   }
   if(!figure->ACTIVE())
@@ -310,7 +312,10 @@ void Glass::game()
       if(!figure->ACTIVE())
       {
           if(sumJ(N-1) != 0 )
+          {
+              QMessageBox::information(0, "Information", "Game Over !");
               done = true;
+          }
           else
           {
               type = rand() % 5 + 1 ;
@@ -321,7 +326,8 @@ void Glass::game()
               for(int i = 0 ;i<support_el.size(); i++)
                       data[i] = support_el[i];
               data[support_el.size()] = type+'0';
-
+              //data[support_el.size()+1] = '.';
+              //data[support_el.size()+2] = type+'0';
               queue_send.add_front(data);
               std::cout<<"TYPEPE_1 IS : "<<"type"+type+'0'<<std::endl;
               std::cout<<"TYPEPE_2 IS : "<<queue_send.return_last()<<std::endl;
@@ -356,35 +362,47 @@ void Glass::activate_message()
         if(queue.return_last() == "right")
         {
             queue.delete_back();
-            PoM = true;
-            figure->boundary(PoM,plane_);
+            if(active && figure->ACTIVE()) //
+            { //
+                PoM = true;
+                figure->boundary(PoM,plane_);
+            } //
             return;
         }
         if(queue.return_last() == "left")
         {
-
-             PoM = false;
-             figure->boundary(PoM,plane_);
-             queue.delete_back();
+            queue.delete_back();
+            if(active && figure->ACTIVE()) //
+            { //
+                PoM = false;
+                figure->boundary(PoM,plane_);
+            } //
              return;
          }
          if(queue.return_last() == "up")
          {
-
-                figure->change_type(plane_);
-                queue.delete_back();
-                return;
+             queue.delete_back();
+             if(active && figure->ACTIVE()) //
+             { //
+                    figure->change_type(plane_);
+             } //
+             return;
          }
          if(queue.return_last() == "down")
          {
-
-                figure->fall(plane_);
                 queue.delete_back();
+                if(active && figure->ACTIVE()) //
+                { //
+                    figure->fall(plane_);
+                } //
                 return;
          }
          if(queue.return_last() == "esc")
          {
              std::cout<<"Game is ending"<<std::endl;
+             //
+             queue.delete_back();
+             //
              done = true;
          }
 

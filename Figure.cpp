@@ -6,47 +6,47 @@ int n = 16;
 int N = 24;
 void Figure::boundary(bool PoM,Plane plane_)
  {
-    if(PoM)
+    if(active)
     {
-        free_figure(plane_);
-        I++;
-
-
-        if(type == 1 )
-            if(I >= n-1 ) I=n-1;
-        if( (type == 2) || (type == 6)||(type == 4) ||(type == 5) )
-            if(I+1 >= n-1 ) I = n-2;
-        if( (type == 8)|| (type == 12) )
-            if(I >= n-1 ) I = n-1;
-        if( (type == 7) || (type == 11) )
-            if(I+1 >= n-1 ) I = n-2;
-        if(type == 3)
-            if(I+1> n-1) I = n-1;
-        if( type == 9)
-            if(I+2>n-1) I = n - 3;
-        if (figure(plane_)) I--;
-        bind_figure(plane_);
+        if(PoM)
+        {
+            free_figure(plane_);
+            I++;
+            if(type == 1 )
+                if(I >= n-1 ) I=n-1;
+            if( (type == 2) || (type == 6)||(type == 4) ||(type == 5) )
+                if(I+1 >= n-1 ) I = n-2;
+            if( (type == 8)|| (type == 12) )
+                if(I >= n-1 ) I = n-1;
+            if( (type == 7) || (type == 11) )
+                if(I+1 >= n-1 ) I = n-2;
+            if(type == 3)
+                if(I+1> n-1) I = n-1;
+            if( type == 9)
+                if(I+2>n-1) I = n - 3;
+            if (figure(plane_)) I--;
+            bind_figure(plane_);
+        }
+        else
+        {
+            free_figure(plane_);
+            I--;
+            if(type == 1 )
+                if(I-1 <= 0 ) I = 1;
+            if( (type == 2) || (type == 6) ||(type == 4) ||(type == 5) )
+                if(I-1 <= 0 ) I = 1;
+            if( (type == 8)|| (type == 12) )
+                if(I-1 <= 0 ) I = 1;
+            if( (type == 7)|| (type == 11) )
+                if(I <= 0 ) I = 0;
+            if(type == 3)
+                if(I<0) I=0;
+            if(type == 9)
+                if(I-1<0) I = 1;
+            if (figure(plane_)) I++;
+            bind_figure(plane_);
+        }
     }
-    else
-    {
-        free_figure(plane_);
-        I--;
-        if(type == 1 )
-            if(I-1 <= 0 ) I = 1;
-        if( (type == 2) || (type == 6) ||(type == 4) ||(type == 5) )
-            if(I-1 <= 0 ) I = 1;
-        if( (type == 8)|| (type == 12) )
-            if(I-1 <= 0 ) I = 1;
-        if( (type == 7)|| (type == 11) )
-            if(I <= 0 ) I = 0;
-        if(type == 3)
-            if(I<0) I=0;
-        if(type == 9)
-            if(I-1<0) I = 1;
-        if (figure(plane_)) I++;
-        bind_figure(plane_);
-    }
-
 
  }
 Figure::Figure(int TYPE, int i, int j,Plane plane_)
